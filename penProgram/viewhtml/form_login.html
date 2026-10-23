@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login User</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+</head>
+
+<body class="bg-primary">
+
+    <div class="container">
+        <div class="row" >
+            <div class="col-md-6" style="text-align: center;margin-top: 200px;margin-left: 300px;">
+                <div class="card" >
+                    <div class="card-header" style="text-align: center;" >
+                        Login
+                    </div>
+                    <div class="card-body">
+                        {% if 'error' in request.session %}
+                            <div class="alert alert-danger">
+                                {{ request.session.msg }}
+                            </div>
+                        {% endif %}
+                        <form action="/proclogin" method="post">
+                           {% csrf_token %}
+                        <div class="form-group">
+                            <label for="staticEmail">Username</label>
+                            <input type="text" class="form-control" id="staticEmail" name="username" placeholder="Masukan Username">
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPassword" >Password</label>
+                            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Masukan Passowrd">
+                          </div>
+                          <div class="form-group">
+                            <input type="submit" class="form-control btn btn-primary" value="Login">
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="{% static '/jquery-3.5.1.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</html>

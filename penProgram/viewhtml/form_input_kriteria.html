@@ -1,0 +1,194 @@
+{% extends "layout/main_layout.html" %}
+{% block title %}Form Input Kriteria{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/prockrit" method="POST">
+        {% csrf_token %}
+        {% if request.session.suc == 0 %}
+        <div class="alert alert-danger">
+            {{ request.session.msg }}
+        </div>
+        {% endif %}
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                Input Kriteria
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="id_kriteria">ID Kriteria</label>
+                    <input type="text" id="id_kriteria" class="form-control" name="id_kriteria"
+                        id="exampleFormControlInput1" placeholder="Masukan ID Kriteria" required>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Nama Kriteria</label>
+                    <input type="text" class="form-control" name="nama_tipe" id="exampleFormControlInput1"
+                        placeholder="Masukan Nama Kriteria" required>
+                </div>
+                <lable>Data Sub Kriteria</lable> <a href="#" class="btn btn-primary" id="tbh_subkrit"
+                    onclick="tambahsubkrite()">+ Tambah Sub Kriteria</a>
+                <p></p>
+                <div id="subkriteria">
+                    <div class="form-group">
+                        <label>Sub Kriteria {{ increment|plusadd:"1" }}</label>
+                        <div class="row">
+                            <div class="col-sm">
+                                <label>ID Sub Kriteria : </label>
+                                <input type="text" class="form-control" name="id_subkrt[]" id="exampleFormControlInput1"
+                                    placeholder="Masukan ID Sub Kriteria" required>
+                            </div>
+                            <div class="col-sm">
+                            <label>Nama Sub Kriteria : </label>
+                                <input type="text" class="form-control" name="nama_subkrit[]"
+                                    id="exampleFormControlInput1" placeholder="Masukan Nama Sub Kriteria" required>
+                            </div>
+                            <div class="col-sm">
+                            <label>Tipe Kriteria : </label>
+                                <select class="form-control" name="pilih_kriteria[]" id="exampleFormControlSelect2"
+                                    aria-placeholder="Pilih Kriteria">
+                                    <option value="0">Cost</option>
+                                    <option value="1">Benefit</option>
+                                </select>
+                            </div>
+                            <div class="col-sm">
+                            <label>Opsi Kriteria : </label>
+                                <select class="form-control" name="daftar_opsi[]" id="exampleFormControlSelect2"
+                                    aria-placeholder="Pilih Kriteria">
+                                    {% for d in dataopsi %}
+                                        <option value="{{ d.id_opsi }}">{{ d.nama_opsi }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm">
+                                <label>Tipe Input : </label>
+                                    <select class="form-control" name="pilihanrad[]" id="exampleFormControlSelect2"
+                                    aria-placeholder="Pilih Kriteria">
+                                    <option value="text">Text</option>
+                                    <option value="select">Pilihan</option>
+                                </select>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Masukan Kriteria" class="btn btn-primary">
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        var subkriteria = document.getElementById("subkriteria")
+        var tbhsm = document.getElementById("tbh_subkrit")
+        var input = 2
+        var radio = 2
+
+
+        function tambahsubkrite() {
+            var divfg = document.createElement("div")
+            var row = document.createElement("div")
+            var colsm = document.createElement("div")
+            var label = document.createElement("label")
+            var label1 = document.createElement("label")
+            var label2 = document.createElement("label")
+            var label3 = document.createElement("label")
+            var label4 = document.createElement("label")
+            var label5 = document.createElement("label")
+            var colsm1 = document.createElement("div")
+            var colsm2 = document.createElement("div")
+            var colsm3 = document.createElement("div")
+            var colsm4 = document.createElement("div")
+            var inputidsub = document.createElement('input')
+            var inputnamasub = document.createElement('input')
+            var radio1 = document.createElement('input')
+            var radio2 = document.createElement('input')
+            var selectsub = document.createElement("select")
+            var seloption = document.createElement("select")
+            var seltipe = document.createElement("select")
+            var option1 = document.createElement('option')
+            var option2 = document.createElement('option')
+            var option3 = document.createElement('option')
+            var option4 = document.createElement('option')
+            inputidsub.setAttribute('name', "id_subkrt[]")
+            inputidsub.setAttribute('class', "form-control")
+            inputidsub.setAttribute('placeholder', "Masukan ID Sub Kriteria")
+            inputidsub.type = "text"
+            label.innerHTML = "Sub kriteria " + input
+            label1.innerHTML = "Tipe Input : "
+            inputnamasub.setAttribute('name', "nama_subkrit[]")
+            inputnamasub.setAttribute('class', "form-control")
+            inputnamasub.setAttribute('placeholder', "Masukan Nama Sub Kriteria")
+            inputnamasub.type = "text"
+            option1.value = 0
+            option1.innerHTML = "Cost"
+            label1.innerHTML = "Tipe Input :"
+            label2.innerHTML = "ID Sub Kriteria :"
+            label3.innerHTML = "Nama Sub Kriteria :"
+            label4.innerHTML = "Tipe Kriteria :"
+            label5.innerHTML = "Opsi Kriteria :"
+            option2.value = 1
+            option2.innerHTML = "Benefit"
+            option3.value = "text"
+            option3.innerHTML = "Text"
+            option4.value = "select"
+            option4.innerHTML = "Pilihan"
+            selectsub.append(option1)
+            selectsub.append(option2)
+            seltipe.append(option3)
+            seltipe.append(option4)
+            {% for l in dataopsi %}
+                var option5 = document.createElement('option')
+                option5.value = "{{ l.id_opsi }}"
+                option5.innerHTML = "{{ l.nama_opsi }}"
+                seloption.append(option5)
+            {% endfor %}
+            colsm.setAttribute('class', "col-sm")
+            colsm1.setAttribute('class', "col-sm")
+            colsm2.setAttribute('class', "col-sm")
+            colsm3.setAttribute('class', "col-sm")
+            colsm4.setAttribute('class', "col-sm")
+            selectsub.setAttribute('class', 'form-control')
+            selectsub.setAttribute('name', "pilih_kriteria[]")
+            seloption.setAttribute('class', 'form-control')
+            seloption.setAttribute('name', "daftar_opsi[]")
+            seltipe.setAttribute('class', 'form-control')
+            seltipe.setAttribute('name', "pilihanrad[]")
+            inputidsub.required = true
+            inputnamasub.required = true
+            colsm.append(label2)
+            colsm.append(inputidsub)
+            colsm1.append(label3)
+            colsm1.append(inputnamasub)
+            colsm2.append(label4)
+            colsm2.append(selectsub)
+            colsm3.append(label5)
+            colsm3.append(seloption)
+            colsm4.append(label1)
+            colsm4.append(seltipe)
+            row.append(colsm)
+            row.append(colsm1)
+            row.append(colsm2)
+            row.append(colsm3)
+            row.append(colsm4)
+            row.setAttribute("class", "row")
+            divfg.append(label)
+            divfg.append(row)
+            divfg.setAttribute("class", "form-group")
+            subkriteria.append(divfg)
+            input = input + 1
+        }
+
+    </script>
+</body>
+
+</html>
+{% endblock %}

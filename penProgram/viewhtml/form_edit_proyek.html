@@ -1,0 +1,280 @@
+{% extends "layout/main_layout.html" %}
+{% block title %}Form Edit Proyek{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/peditproyek/{{ id_pro }}" method="post">
+        {% csrf_token %}
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                Input Proyek
+            </div>
+            {% for o in isikrite %}
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Nama Proyek</label>
+                    <input type="text" class="form-control" name="nm_pro" id="exampleFormControlInput1" value="{{ o.nm_pro }}"
+                        placeholder="Masukan Nama Proyek">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Kategori Proyek</label>
+                    <input type="text" class="form-control" name="kt_pro" id="exampleFormControlInput1" value="{{ o.kt_pro }}"
+                        placeholder="Masukan Kategori Proyek">
+                </div>
+                <div class="form-group">
+                    {% if o.manual == 0 %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pilihan_radio"  id="radioselect" value="otomatis" onclick="ubahinputnilai()" checked>
+                        <label class="form-check-label" for="exampleRadios1" >
+                          Tidak Ingin Menyebarkan Nilai Proyek
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  name="pilihan_radio" id="radioselect1" value="manual" onclick="ubahinputnilai()">
+                        <label class="form-check-label" for="exampleRadios2">
+                          Ingin Menyebarkan Nilai Proyek
+                        </label>
+                      </div>
+                      {% elif o.manual == 1 %}
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" name="pilihan_radio"  id="radioselect" value="otomatis" onclick="ubahinputnilai()">
+                        <label class="form-check-label" for="exampleRadios1" >
+                          Tidak Ingin Menyebarkan Nilai Proyek
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  name="pilihan_radio" id="radioselect1" value="manual" onclick="ubahinputnilai()" checked>
+                        <label class="form-check-label" for="exampleRadios2">
+                          Ingin Menyebarkan Nilai Proyek
+                        </label>
+                      </div>
+                      {% endif %}
+                </div>
+                <div class="form-group" id="nilaiproyek">
+                        
+                </div>
+                
+                {% for datap in daftar_tipe %}
+                <div class="row">
+                    <div class="col">
+                        <div class="card" style="width: 100%;">
+                            <div class="card-header bg bg-primary text-light">
+                                {{ datap.nama_tipe }}
+                            </div>
+                            <div class="card-body">
+                                <!--row 1-->
+                                {% for datakri in dkrit %}
+                                <div class="row">
+
+                                    {% if datakri.id_kriteria == datap.id_kriteria %}
+                                    {% if datakri.id_subkrt == "kl_01" %}
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                            <select class="form-control" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}"
+                                                id="exampleFormControlSelect1">
+                                                <option value="0.0">Diabaikan </option>
+                                                <option value="0.2">Sangat Rendah</option>
+                                                <option value="0.4">Rendah</option>
+                                                <option value="0.6">Sedang</option>
+                                                <option value="0.8">Tinggi</option>
+                                                <option value="1.0">Sangat Tinggi</option>
+                                        </select>
+                                    {% elif datakri.id_subkrt == "kl_02" %}
+                                
+
+                                    {% elif datakri.id_subkrt == "kl_03" %}
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                            <select class="form-control" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}"
+                                                id="exampleFormControlSelect1">
+                                                <option value="0.0">Diabaikan </option>
+                                                <option value="0.2">Sangat Rendah</option>
+                                                <option value="0.4">Rendah</option>
+                                                <option value="0.6">Sedang</option>
+                                                <option value="0.8">Tinggi</option>
+                                                <option value="1.0">Sangat Tinggi</option>
+                                        </select>
+                                    </div>
+                                    {% elif datakri.id_subkrt == "kl_04" %}
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                            <input type="number" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}" class="form-control" onchange="checkis0('{{ datakri.id_subkrt }}')" placeholder="Masukan Estimasi Dalam Bulan" value="{{ o.waktu_perb }}">
+                                    </div>
+                                    {% elif datakri.id_subkrt == "kl_05" %}
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                            <select class="form-control" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}"
+                                                id="exampleFormControlSelect1">
+                                                <option value="0.0">0% - 3% </option>
+                                                <option value="0.2">4% - 7%</option>
+                                                <option value="0.4">7% - 11%</option>
+                                                <option value="0.6">12% - 15%</option>
+                                                <option value="0.8">16% - 20%</option>
+                                                <option value="1.0"> 20%</option>
+                                        </select>
+                                    </div>
+                                    {% elif datakri.id_subkrt == "kl_06" %}
+                                    <div class="col-sm">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                            <input type="number" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}" class="form-control" onchange="checkis0('{{ datakri.id_subkrt }}')" placeholder="Masukan Jumlah Modul" value="{{ o.jml_mod }}">
+                                        </div>
+                                    {% elif datakri.id_opsi == "" %}
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                                <select class="form-control" name="{{ datakri.id_subkrt }}"
+                                                    id="exampleFormControlSelect1">
+                                                    <option value="0.0">Resiko Sangat Sangat Rendah </option>
+                                                    <option value="0.2">Resiko Sangat Rendah</option>
+                                                    <option value="0.4">Resiko Rendah</option>
+                                                    <option value="0.6">Resiko Sedang</option>
+                                                    <option value="0.8">Resiko Tinggi</option>
+                                                    <option value="1.0">>Resiko Sangat Tinggi</option>
+                                            </select>
+                                            </div>
+                                        {% else %}
+                                        <div class="col-sm">
+                                            <div class="form-group">
+                                                {% if datakri.tipe_input == "text" %}
+                                                <div class="form-group">
+                                                        <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                                        <input type="text" name="{{ datakri.id_subkrt }}" id="{{ datakri.id_subkrt }}" class="form-control"  placeholder="Masukan {{ datakri.nama_subkrit }}">
+                                                </div>
+                                                {% else %}
+                                                <label for="exampleFormControlInput1">{{ datakri.nama_subkrit }}</label>
+                                                <select class="form-control" name="{{ datakri.id_subkrt }}"
+                                                    id="exampleFormControlSelect1">
+                                                    {% for bm in opsi %}
+                                                    {% if datakri.id_opsi ==  bm.id_daftar %}
+                                                        <option value="{{ bm.value_opsi }}">{{ bm.deskripsi_opsi }}</option>
+                                                    
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    </select>
+                                                {% endif %}
+                                                
+                                            </div>
+                                        {% endif %}
+                                    
+                                </div>
+                                {% endif %}
+
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+                {% endfor %}
+                {% endfor %}
+                <input type="submit" value="Ubah Data Proyek" class="btn btn-success">
+
+            </div>
+        </div>
+    </form>
+    <script>
+        ubahinputnilai()
+
+        {% for p in nkriter %}
+            var select = document.getElementById("{{p.id_subkrit}}")
+            select.value = "{{ p.nilai }}"
+            if ({{p.id_subkrit}} == "kl_05"){
+                var select = document.getElementById("kl_05")
+                select.value = "{{ p.nilai }}"
+            }
+            if ({{p.id_subkrit}} == "kl_03"){
+                var select = document.getElementById("kl_03")
+                select.value = "{{ p.nilai }}"
+            }
+        {% endfor %}
+
+        
+
+        function ubahinputnilai() {
+            var form = document.getElementById("nilaiproyek")
+            var radio = document.getElementById("radioselect")
+            var radio1 = document.getElementById("radioselect1")
+            form.innerHTML = ""
+            if(radio.checked){
+                lbl = document.createElement("label")
+                lbl.setAttribute("for","exampleFormControlInput1")
+                lbl.innerHTML = "Nilai Proyek"
+                sl = document.createElement("select")
+                sl.setAttribute("class","form-control")
+                sl.setAttribute("id","exampleFormControlInput1")
+                sl.setAttribute("name","kl_02")
+                opt1 = document.createElement("option")
+                opt2 = document.createElement("option")
+                opt3 = document.createElement("option")
+                opt4 = document.createElement("option")
+                opt5 = document.createElement("option")
+                opt6 = document.createElement("option")
+                opt1.setAttribute("value","0.0")
+                opt2.setAttribute("value","0.2")
+                opt3.setAttribute("value","0.4")
+                opt4.setAttribute("value","0.6")
+                opt5.setAttribute("value","0.8")
+                opt6.setAttribute("value","1.0")
+                opt1.innerHTML = "0 - 70 Juta"
+                opt2.innerHTML = "71 - 200 Juta"
+                opt3.innerHTML = "201 - 850 Juta"
+                opt4.innerHTML = "851 Juta - 2 Miliar"
+                opt5.innerHTML = "2.1 Miliar - 7 Miliar"
+                opt6.innerHTML = "> 7 Miliar"
+                sl.append(opt1)
+                sl.append(opt2)
+                sl.append(opt3)
+                sl.append(opt4)
+                sl.append(opt5)
+                sl.append(opt6)
+                {% for mb in isikrite %}
+                    {% for p in nkriter %}
+                        {% if mb.manual == 0 %}
+                            sl.value = "{{ p.nilai }}"
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                form.append(lbl)
+                form.append(sl)
+            }else if(radio1.checked){
+                lbl = document.createElement("label")
+                input = document.createElement("input")
+                input.setAttribute("type","text")
+                input.setAttribute("class","form-control")
+                input.setAttribute("oninput","changeinput()")
+                input.setAttribute("id","idp")
+                input.setAttribute("placeholder","Masukan NIlai/Harga Proyek Contoh:70.000.000")
+                input.setAttribute("name","kl_02")
+                lbl.setAttribute("for","exampleFormControlInput1")
+                lbl.innerHTML = "Nilai Proyek"
+                {% for mb in isikrite %}
+                    {% for p in nkriter %}
+                        {% if mb.manual == 0 %}
+                            input.value = "{{ mb.nilai_pro }}"
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                form.append(lbl)
+                form.append(input)
+            }
+        }
+    </script>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "layout/main_layout.html" %}
+{% block title %}Form Edit Opsi{% endblock %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    {% for c in opsi %}
+    <form action="/ubahediopsit/{{ c.id_opsi }}" method="post">
+        {% csrf_token %}
+        <div class="card" style="width: 100%;">
+            <div class="card-header">
+                Input Opsi Kriteria
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                
+                    <label for="exampleFormControlInput1">Nama Opsi</label>
+                    <input type="text" class="form-control" name="nm_opsi" id="exampleFormControlInput1" required
+                        placeholder="Masukan Nama Opsi" value="{{ c.nama_opsi }}">
+                </div>
+                {% endfor %}
+                <div class="form-group" id="opsi"><label for="exampleFormControlInput1">List Opsi </label><a href="#" class="btn btn-primary" id="tbh_subkrit"
+                    onclick="ubahinputnilai()">+ Tambah Opsi Kriteria</a>
+                    
+                    <div id="options">
+                    </div>
+                        
+                </div>
+
+                <input type="submit" value="Ubah Data Opsi" class="btn btn-success">
+
+            </div>
+        </div>
+    </form>
+    <script>
+        var nomor = 1
+
+        reload()
+
+        function reload(){
+          
+                {% for a in dopsi %}
+            
+                    var form = document.getElementById("options")
+                    lbl = document.createElement("label")
+                    input = document.createElement("input")
+                    input.setAttribute("type","text")
+                    input.setAttribute("class","form-control")
+                    input.setAttribute("name","opsi[]")
+                    input.setAttribute("placeholder","Masukan Nama Opsi")
+                    input.value = "{{ a.deskripsi_opsi }}"
+                    lbl.setAttribute("for","exampleFormControlInput1")
+                    lbl.innerHTML = "Opsi "+ nomor
+                    form.append(lbl)
+                    form.append(input)
+                    nomor = nomor + 1
+                {% endfor %}
+           
+        }
+
+        function ubahinputnilai() {
+            var form = document.getElementById("options")
+            lbl = document.createElement("label")
+            input = document.createElement("input")
+            input.setAttribute("type","text")
+            input.setAttribute("class","form-control")
+            input.setAttribute("name","opsi[]")
+            input.setAttribute("placeholder","Masukan Nama Opsi")
+            lbl.setAttribute("for","exampleFormControlInput1")
+            lbl.innerHTML = "Opsi "+ nomor
+            form.append(lbl)
+            form.append(input)
+            nomor = nomor + 1
+            
+        }
+
+      
+    </script>
+</body>
+
+</html>
+{% endblock %}

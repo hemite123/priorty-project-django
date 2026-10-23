@@ -1,0 +1,86 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Daftar User{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-body">
+        {% if request.session.suc == 1 %}
+        <div class="alert alert-success">
+            {{ request.session.msg }}
+        </div>
+        {% endif %}
+            <table id="example" class="display responsive nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama User</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Nama Perusahaan</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in user %}
+                    <tr>
+                        {% for n in nomor %}
+                            {% if n.id_user == x.id_user  %}
+                                <td> {{ n.nomor }} </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{ x.nama_user }}</td>
+                        <td>{{ x.username }}</td>
+                        <td>{{ x.password }}</td>
+                        <td>{{ x.perusahaan }}</td>
+                        <td><a href="/edituser/{{ x.id_user }}"  class="btn btn-success"><i class="fa fa-edit"></i></a>/<a href="#exampleModal" data-toggle="modal" data-target="#exampleModal"  class="btn btn-danger" ><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                   
+                </tbody>
+
+            </table>
+        </div>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Notifikasi Hapus User</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda Yakin Ingin Menghapus User {{ x.nama_user }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a type="button" class="btn btn-danger" href="/deleteuser/{{ x.id_user }}">Hapus User</a>
+      </div>
+    </div>
+  </div>
+</div>
+ {% endfor %}
+    </div>
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Prioritas Proyek{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-body">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Proyek</th>
+                        <td>Overload Cost</td>
+                        <th>Ranking</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in rank %}
+                    <tr>
+                        <td>{{ i.rank }}</td>
+                        {% for dp in dpro %}
+                        {% if dp.id_pro == i.id_proyek %}
+                        <td>{{ dp.nm_pro }}</td>
+                        {% for op in ocost %}
+                        {% if op.id_proyek == dp.id_pro%}
+                            <td>{{ op.hasil }}</td>
+                        {% endif %}
+                    {% endfor %}
+                        {% endif %}
+                       
+                        {% endfor %}
+                        {% if i.rank == 1%}
+                        <td>{{ i.rank }}<i class="fa fa-trophy" style="color: yellow;"></i></td>
+                        {% elif i.rank == 2%}
+                        <td>{{ i.rank }}<i class="fa fa-trophy" style="color: grey;"></i></td>
+                        {% elif i.rank == 3%}
+                        <td>{{ i.rank }}<i class="fa fa-trophy" style="color: brown;"></i></td>
+                        {% else %}
+                        <td>{{ i.rank }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}

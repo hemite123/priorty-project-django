@@ -1,0 +1,173 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Daftar Proyek{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+{% for x in dproyek %}
+    <div class="card">
+    <div class="card-header">
+    {% for kl in num  %}
+        {% if kl.id_pro == x.id_pro %}
+            <i class="fa fa-edit">{{ kl.nomor }}. {{x.nm_pro}} / {{ x.kt_pro }}</i>
+        {% endif %}
+    {% endfor %}
+    </div>
+        <div class="card-body">
+        {% if request.session.suc == 1 %}
+        <div class="alert alert-success">
+            {{ request.session.msg }}
+        </div>
+        {% endif %}
+         <div class="table-responsive my-custom-scrollbar overflow-auto">
+            <table id="example" class="table table-bordered" style="width:100%" >
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Proyek</th>
+                        <th>Kategori Proyek</th>
+                        {% for c in dsub %}
+                            <th>{{ c.nama_subkrit }}</th>
+                        {% endfor %}
+                        <th>Status</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>{{ x.id_pro }}</td>
+                        <td>{{ x.nm_pro }}</td>
+                        <td>{{ x.kt_pro }}</td>
+                        {% for d in dsub %}
+                            {% for dn in dnilai%}
+                                {% if dn.id_pro == x.id_pro and dn.id_subkrit == d.id_subkrt %}
+                                    {% if d.id_subkrt == "kl_05" %}
+                                        {% if dn.nilai == 0.0 %}
+                                            <td>0% - 3% </td>
+                                        {% elif dn.nilai == 0.2 %} 
+                                            <td>4% - 7%</rd>
+                                        {% elif dn.nilai == 0.4 %} 
+                                            <td>7% - 11%</td>
+                                        {% elif dn.nilai == 0.6 %} 
+                                            <td>12% - 15%</td>
+                                        {% elif dn.nilai == 0.8 %} 
+                                            <td>16% - 20%</td>
+                                        {% elif dn.nilai == 1.0 %} 
+                                            <td>20%</td>
+                                        {% endif %}
+                                    {% elif d.id_subkrt == "kl_01" %}
+                                        {% if dn.nilai == 0.0 %}
+                                            <td>Diabaikan</td>
+                                        {% elif dn.nilai == 0.2 %} 
+                                            <td>Sangat Rendah</rd>
+                                        {% elif dn.nilai == 0.4 %} 
+                                            <td>Rendah</td>
+                                        {% elif dn.nilai == 0.6 %} 
+                                            <td>Sedang</td>
+                                        {% elif dn.nilai == 0.8 %} 
+                                            <td>Tinggi</td>
+                                        {% elif dn.nilai == 1.0 %} 
+                                            <td>Sangat Tinggi</td>
+                                        {% endif %}
+                                    {% elif d.id_subkrt == "kl_02" %}
+                                        <td>{{ x.nilai_pro }}</td>
+                                    {% elif d.id_subkrt == "kl_03" %}
+                                        {% if dn.nilai == 0.0 %}
+                                            <td>Diabaikan</td>
+                                        {% elif dn.nilai == 0.2 %} 
+                                            <td>Sangat Rendah</rd>
+                                        {% elif dn.nilai == 0.4 %} 
+                                            <td>Rendah</td>
+                                        {% elif dn.nilai == 0.6 %} 
+                                            <td>Sedang</td>
+                                        {% elif dn.nilai == 0.8 %} 
+                                            <td>Tinggi</td>
+                                        {% elif dn.nilai == 1.0 %} 
+                                            <td>Sangat Tinggi</td>
+                                        {% endif %}
+                                    {% elif d.id_subkrt == "kl_04" %}
+                                        <td>{{ x.waktu_perb }}</td>
+                                    {% elif d.id_subkrt == "kl_06" %}
+                                        <td>{{ x.jml_mod }}</td>
+                                    {% elif d.id_subkrt == "kl_06" %}
+                                        <td>{{ x.jml_mod }}</td>
+                                    {% elif d.id_opsi == "" %}
+                                        {% if dn.nilai == 0.0 %}
+                                            <td>Resiko Sangat Sangat Rendah</td>
+                                        {% elif dn.nilai == 0.2 %} 
+                                            <td>Resiko Sangat Rendah</rd>
+                                        {% elif dn.nilai == 0.4 %} 
+                                            <td>Resiko Rendah</td>
+                                        {% elif dn.nilai == 0.6 %} 
+                                            <td>Resiko Sedang</td>
+                                        {% elif dn.nilai == 0.8 %} 
+                                            <td>Resiko Tinggi</td>
+                                        {% elif dn.nilai == 1.0 %} 
+                                            <td>Resiko Sangat Tinggi</td>
+                                        {% endif %}
+                                    {% else %}
+                                    {% for opt in opsi %}
+                                            {% if d.id_opsi == opt.id_daftar %}
+                                                {% if dn.nilai == opt.value_opsi %}
+                                                    <td>{{ opt.deskripsi_opsi }}</td>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                        {% if x.selesai == 0%}
+                            <td><div class="text-warning">Belum Dikerjakan</div></td>
+                        {% else %}
+                            <td><div class="text-success">Sudah Dikerjakan</div></td>
+                        {% endif %}
+                        <td><a href="/editproyek/{{ x.id_pro }}" class="btn btn-primary"><i class="fa fa-edit"></i></a>/<a href="#exampleModal" data-toggle="modal" data-target="#exampleModal" class="btn btn-danger"><i class="fa fa-trash"></i></a>/
+                            {% if x.selesai == 0%}
+                            <a href="/selesaipro/{{ x.id_pro }}" class="btn btn-success">Pengerjaan Selesai</a></td>
+                            {% endif %}
+                    </tr>
+                    
+                </tbody>
+
+            </table>
+            </div>
+        </div>
+    </div>
+     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Hapus Proyek</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda Yakin Ingin Menghapus Proyek {{ x.nm_pro }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a type="button" class="btn btn-danger" href="/hapuspro/{{ x.nm_pro }}">Hapus Proyek</a>
+      </div>
+    </div>
+  </div>
+</div>
+    {% endfor %}
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+
+
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Input Persamaan{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col-7 ">
+            <div class="card" >
+                <div class="card-header">
+                    <form action="/displayper" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label>Daftar Tipe Kriteria</label>
+                            <select name="datadisplay" class="form-control">
+                                {% for e in datatipekrite %}
+                                <option value="{{ e.id_kriteria }}">{{ e.nama_tipe }} </option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <input type="submit" value="Buka Persamaan" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    {% if suc == 1 %}
+                    <div class="alert alert-success" style="display: none;" id="alertmsg">
+                        Data Berhasil Diubah
+                    </div>
+                    {% endif %}
+                    {% if datatampil != None %}
+                    {% for k in datatipekrite %}
+                    {% if k.id_kriteria ==  id_krite %}
+                    <label>{{ k.nama_tipe }} </label>
+                    {% endif %}
+                    {% endfor %}
+                    <div class="table-responsive my-custom-scrollbar overflow-auto">
+                        <table class="table table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th scope="" style="text-align: center;">Kriteria</th>
+                                    {% for i in daftarsub %}
+                                    {% if i.id_kriteria == id_krite %}
+                                    <th scope="col" style="text-align: center;">{{ i.nama_subkrit }}</th>
+                                    {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody id="datapersamaan">
+                
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-1 col-md-1 ">
+             <img src="{% static '/tabelpenilaian.jpeg' %}" width="450px" height="450px"></img>
+        </div>
+        <div class="col-1">
+            
+       </div>
+    </div>
+
+    {% csrf_token %}
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+    <script>
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        reloads()
+
+        function reloads() {
+            var dper = document.getElementById("datapersamaan")
+            dper.innerHTML = ""
+            var arrays = []
+            {% for ls in daftarsub %}
+                var tr = document.createElement("tr")
+                {% if ls.id_kriteria == id_krite %}
+                    var td = document.createElement("td")
+                    td.setAttribute("style","text-align: center;")
+                    td.innerHTML = "{{ ls.nama_subkrit }}"
+                    tr.append(td)
+                    {% for lo in datatampil %}  
+                        if ("{{ ls.id_subkrt }}" == "{{ lo.id_subkrit1 }}" && "{{ lo.id_subkrit1 }}" == "{{ lo.id_subkrit2 }}"){
+                            var td1 = document.createElement("td")
+                            td1.setAttribute("style","text-align: center;")
+                            td1.innerHTML = "{{ lo.nilai }}"
+                            tr.append(td1)
+                            arrays.push("{{ lo.id_subkrit2 }}")
+                        }else if("{{ ls.id_subkrt }}" == "{{ lo.id_subkrit1 }}" && "{{ lo.id_subkrit1 }}" != "{{ lo.id_subkrit2 }}"){
+                            var done = false
+                            var td1 = document.createElement("td")
+                            td1.setAttribute("style","text-align: center;")
+                            for (let index = 0; index < arrays.length; index++) {
+                                if("{{ lo.id_subkrit2 }}" == arrays[index]){
+                                    
+                                    td1.innerHTML = "{{ lo.nilai }}"
+                                    tr.append(td1)
+                                    var done = true
+                                }
+                                
+                            }
+                           
+                            if(done == false){
+                                var input = document.createElement("input")
+                                input.type = "number"
+                                input.name = "number"
+                                input.setAttribute("oninput","changevalue('{{ lo.id_subkrit1 }}','{{ lo.id_subkrit2 }}','{{ lo.id_subkrit1 }}/{{ lo.id_subkrit2 }}','{{ ls.id_kriteria }}')")
+                                input.setAttribute("onchange","changevalue('{{ lo.id_subkrit1 }}','{{ lo.id_subkrit2 }}','{{ lo.id_subkrit1 }}/{{ lo.id_subkrit2 }}','{{ ls.id_kriteria }}')")
+                                input.setAttribute("onkeyup","changevalue('{{ lo.id_subkrit1 }}','{{ lo.id_subkrit2 }}','{{ lo.id_subkrit1 }}/{{ lo.id_subkrit2 }}','{{ ls.id_kriteria }}')")
+                                input.setAttribute("style","text-align: center;")
+                                input.setAttribute("id","{{ lo.id_subkrit1 }}/{{ lo.id_subkrit2 }}")
+                                input.value = "{{ lo.nilai }}" 
+                                td1.append(input)
+                            }
+                            tr.append(td1)
+    
+                        }
+                        
+                        
+                    {% endfor %}
+                    dper.append(tr)
+                {% endif %}
+             
+            {% endfor %}
+        }
+
+        function changevalue(idsubkrt1, id_subkrit2, idinput, idkriteria) {
+            var input = document.getElementById(idinput).value
+            if (input < 1) {
+                document.getElementById(idinput).value = 1
+                input = 1
+                return
+            } else if (input > 9) {
+                document.getElementById(idinput).value = 9
+                input = 9
+                return
+            }
+            $.ajax({
+                url: '/prosesubahpersamaan',
+                headers: { 'X-CSRFToken': csrftoken },
+                method: 'POST',
+                data: {
+                    'ubah': input,
+                    'id_sub1': idsubkrt1,
+                    'id_sub2': id_subkrit2,
+                    'idkriteria': idkriteria
+
+                },
+                success: function (data) {
+                    location.reload(data)
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(err.Message);
+                }
+            });
+    
+        }
+    </script>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'fontawsome/css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'datatables/jquery.dataTables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'datatables/responsive.dataTables.min.css' %}">
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header bg bg-primary">
+                <h1 style="text-align: center;"><i class="fa fa-briefcase"></i><i class="fa fa-building"></i></h1>
+            </div>
+
+            <ul class="list-unstyled components bg-primary">
+                <li>
+                    <a href="#" data-toggle="collapse" aria-expanded="false"><i class="fa fa-home"> Home</i> </a>
+                </li>
+                <li>
+                    <a href="#pageProyek" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                            class="fa fa-briefcase"> Proyek</i></a>
+                    <ul class="collapse list-unstyled" id="pageProyek">
+                        <li>
+                            <a href="/inputp"><i class="fa fa-plus-circle"> Input Proyek</i></a>
+                        </li>
+                        <li>
+                            <a href="/displayproyek"><i class="fa fa-newspaper"> Daftar Proyek</i></a>
+                        </li>
+                        <li>
+                            <a href="/hitungpersamaan"><i class="fa fa-trophy"> Ranking Dan Overload Cost Proyek</i></a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#pageKriteria" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                            class="fa fa-database"> Kriteria</i></a>
+                    <ul class="collapse list-unstyled" id="pageKriteria">
+                        <li>
+                            <a href="/inputk"><i class="fa fa-plus-circle"> Input Kriteria</i></a>
+                        </li>
+                        <li>
+                            <a href="/daftarkrit"><i class="fa fa-newspaper"> Daftar Kriteria</i></a>
+                        </li>
+                        <li>
+                            <a href="/displayper"><i class="fa fa-folder"> Input Nilai Persamaan Proyek</i></a>
+                        </li>
+                        <li>
+                            <a href="/inputopsi"><i class="fa fa-check"> Input Opsi Kriteria</i></a>
+                        </li>
+                        <li>
+                            <a href="/daftaropsi"><i class="fa fa-book"> Daftar Opsi Kriteria</i></a>
+                        </li>
+                    </ul>
+                </li>
+                {% if request.session.akses == "SU" %}
+                <li>
+                    <a href="#pageUser" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i
+                            class="fa fa-user"> User</i></a>
+                    <ul class="collapse list-unstyled" id="pageUser">
+                        <li>
+                            <a href="/inputu"><i class="fa fa-plus-circle"> Input User</i></a>
+                        </li>
+                        <li>
+                            <a href="/daftaruser"><i class="fa fa-book"> Daftar User</i></a>
+                        </li>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content" style="width: 100%;">
+            <nav class="navbar navbar-dark" style="background-color: #6b86ff;">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+                    <div style="float: right;">
+                        <a href="#"  id="sidebarCollapse" class="btn btn-primary">
+                            <i class="fa fa-user"> {{ request.session.namauser }}</i>
+                        </a>
+                        <a href="/logout"id="sidebarCollapse" class="btn btn-primary">
+                            <i class="fa fa-door-open"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        {%block content%}
+                        {%endblock%}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'datatables/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'jquery-mask/jquery.mask.min.js'' %}"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+        });
+    </script>
+</body>
+
+
+</html>

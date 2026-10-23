@@ -1,0 +1,73 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Daftar Subkriteria{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-body">
+        {% if request.session.suc == 1 %}
+        <div class="alert alert-success">
+            {{ request.session.msg }}
+        </div>
+        {% endif %}
+        <a href="/daftarkrit" class="btn btn-primary"><i class="fa fa-angle-left"></i></a>
+            <table id="example" class="display responsive nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Sub Kriteria</th>
+                        <th>Tipe Sub Kriteria</th>
+                        <th>Opsi</th>
+                        <th>Tipe Input</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in subkrit %}
+                    <tr>
+                        {% for n in nomor %}
+                            {% if n.id_subkrit == x.id_subkrt  %}
+                                <td> {{ n.nomor }} </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{ x.nama_subkrit }}</td>
+                        <td>{% if x.pilih_kriteria == 1 %}
+                        Benefit
+                        {% else %}
+                        Cost
+                        {% endif %}</td>
+                        <td>{% for j in  opsi%}
+                            {% if j.id_opsi == x.id_opsi %}
+                                {{ j.nama_opsi }}
+                            {% endif %}
+                        {% endfor %}</td>
+                        <td>{{ x.tipe_input }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}

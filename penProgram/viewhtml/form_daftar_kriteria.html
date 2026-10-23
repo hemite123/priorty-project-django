@@ -1,0 +1,83 @@
+{% extends "layout/main_layout.html" %}
+{% load static %}
+{% block title %}Form Daftar Kriteria{% endblock %}
+{% load custemp %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-body">
+        {% if request.session.suc == 1 %}
+        <div class="alert alert-success">
+            {{ request.session.msg }}
+        </div>
+        {% endif %}
+            <table id="example" class="display responsive nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Tipe Kriteria</th>
+                        <th>Daftar Sub Kriteria</th>
+                        <th>Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for x in tipe %}
+                    <tr>
+                        {% for n in nomor %}
+                            {% if n.id_krit == x.id_kriteria  %}
+                                <td> {{ n.nomor }} </td>
+                            {% endif %}
+                        {% endfor %}
+                        <td>{{ x.nama_tipe }}</td>
+                        <td><a href="/daftarsub/{{ x.id_kriteria }}" class="btn btn-primary">Lihat Daftar Sub Kriteria</a></td>
+                        <td><a href="/editkrit/{{ x.id_kriteria }}"  class="btn btn-success"><i class="fa fa-edit"></i></a>/<a href="#exampleModal" data-toggle="modal" data-target="#exampleModal"  class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Hapus Kriteria</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda Yakin Ingin Menghapus Kriteria {{ x.nama_tipe }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a type="button" class="btn btn-danger" href="/hapuskrit/{{ x.id_kriteria }}">Hapus Kriteria</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+         
+    </div>
+    <script src="{% static '/jquery-3.5.1.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable({
+                responsive: true
+            });
+        });
+    </script>
+</body>
+
+</html>
+{% endblock %}
